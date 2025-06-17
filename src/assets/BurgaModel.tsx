@@ -10,6 +10,7 @@ import type {ObjectMap} from "@react-three/fiber";
 import type {GLTF} from "three-stdlib";
 import {animated, useSpring} from "@react-spring/three";
 import {memo} from "react";
+import {Root, Text} from "@react-three/uikit";
 
 type GLTFResult = GLTF & ObjectMap & {
     nodes: {
@@ -22,16 +23,17 @@ type GLTFResult = GLTF & ObjectMap & {
 
 export type BurgaProps = {
     position: [number, number, number],
-    scale: number,
-    handleClick: () => void
+    handleClick: () => void,
+    page: 'home' | 'game'
 }
 
 const duration = 150;
 
 function BurgaModel(props: BurgaProps) {
     const [springs, api] = useSpring(() => ({
-        position: [props.position[0], props.position[1], props.position[2]],
-        rotation: [0, 0, 0],
+        position: [props.position[0], props.position[1], props.position[2]] as [number, number, number],
+        rotation: [0, 0, 0] as [number, number, number],
+        scale: [1, props.page === "home" ? 5 : 1, 1] as [number, number, number],
         config: {mass: 0.05, tension: 170, friction: 26}
     }), [props.position])
 
@@ -39,31 +41,39 @@ function BurgaModel(props: BurgaProps) {
 
     const handleClick = () => {
         props.handleClick()
-        api.start({
-            position: [props.position[0], props.position[1] + 2, props.position[2]],
-            rotation: [0, 0, Math.PI / 2],
-            config: {duration: duration},
-            onRest: () => {
-                api.start({
-                    position: [props.position[0], props.position[1], props.position[2]],
-                    rotation: [0, 0, Math.PI],
-                    config: {duration: duration},
-                    onRest: () => {
-                        api.start({
-                            rotation: [0, 0, 0],
-                            config: {duration: 0}
-                        })
-                    }
-                })
-            }
-        })
+        if (props.page === "game") {
+            api.start({
+                position: [props.position[0], props.position[1] + 2, props.position[2]],
+                rotation: [0, 0, Math.PI / 2],
+                config: {duration: duration},
+                onRest: () => {
+                    api.start({
+                        position: [props.position[0], props.position[1], props.position[2]],
+                        rotation: [0, 0, Math.PI],
+                        config: {duration: duration},
+                        onRest: () => {
+                            api.start({
+                                rotation: [0, 0, 0],
+                                config: {duration: 0}
+                            })
+                        }
+                    })
+                }
+            })
+        }
     }
 
     return (
         <animated.group onClick={handleClick} dispose={null} {...props}
-                        rotation={springs.rotation.to((x, y, z) => [x, y, z])}
-                        position={springs.position.to((x, y, z) => [x, y, z])} scale={props.scale}>
-            <mesh geometry={nodes.Cylinder.geometry} material={materials['Material.001']}/>
+                        rotation={springs.rotation.to((x, y, z) => [x, y, z]) as unknown as [number, number, number]}
+                        position={springs.position}>
+            {props.page === "home" && (
+                <Root width={"100%"} transformTranslateZ={50} transformTranslateY={-2}>
+                    <Text textAlign={"center"} color={"white"} fontSize={50}>Play</Text>
+                </Root>
+            )}
+            <animated.mesh geometry={nodes.Cylinder.geometry} scale={springs.scale}
+                           material={materials['Material.001']}/>
         </animated.group>
     )
 }
