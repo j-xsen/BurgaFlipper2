@@ -38,9 +38,12 @@ export default function ScoreBoard(props: ScoreBoardProps) {
                     <AnimatedCard {...globalCardProps} height={150} width={300} justifyContent={"center"}>
                         <CardHeader>
                             <CardTitle>
-                                <Text textAlign={"center"} color={"darkorange"} fontSize={page === "home" ? 45 : 60}>
-                                    {page === "home" ? "Burga Flipper 2" : "Score"}
+                                <Container>
+                                <Text width={200} textAlign={"center"} color={"darkorange"} fontSize={page === "home" ? 45 : 60}>
+                                    {page === "home" ? "Burga Flipper" : "Score"}
                                 </Text>
+                                <Text color={"orange"} width={50} fontSize={60} textAlign={"right"} display={props.page==="home"?"flex":"none"}>2</Text>
+                                </Container>
                             </CardTitle>
                         </CardHeader>
                     </AnimatedCard>

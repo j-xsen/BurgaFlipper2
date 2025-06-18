@@ -31,8 +31,8 @@ function App() {
     return (
         <>
             <Canvas>
-                <ambientLight intensity={10}/>
-                <SpotLight position={[0, 3, 1]} intensity={10} distance={20} attenuation={0} angle={Math.PI / 2}/>
+                <ambientLight intensity={1}/>
+                <SpotLight position={[0, 3, 1]} intensity={15} color={"yellow"} distance={20} attenuation={0} angle={Math.PI / 2}/>
                 <ScoreHandler page={page} setPage={setPage}/>
             </Canvas>
         </>
