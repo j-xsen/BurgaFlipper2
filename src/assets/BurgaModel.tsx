@@ -6,13 +6,17 @@ Files: burger.glb [8.03KB] > Z:\coding\BurgaFlippa2\public\burger-transformed.gl
 
 import * as THREE from 'three'
 import {useGLTF} from '@react-three/drei'
-import type {ObjectMap} from "@react-three/fiber";
+import {type ObjectMap} from "@react-three/fiber";
 import type {GLTF} from "three-stdlib";
 import {animated, useSpring} from "@react-spring/three";
-import {memo, useState} from "react";
+import {memo, useContext, useState} from "react";
 import {Root, Text} from "@react-three/uikit";
 import {BunTop} from "./BunTop.tsx";
-import { BunBottom } from './BunBottom.tsx';
+import {BunBottom} from './BunBottom.tsx';
+import ScoreContext from "../ScoreContext.tsx";
+
+const BunTopMemo = memo(BunTop)
+const BunBottomMemo = memo(BunBottom)
 
 type GLTFResult = GLTF & ObjectMap & {
     nodes: {
@@ -35,35 +39,39 @@ function BurgaModel(props: BurgaProps) {
     const [springs, api] = useSpring(() => ({
         position: [props.position[0], props.position[1], props.position[2]] as [number, number, number],
         rotation: [0, 0, 0] as [number, number, number],
-        bunScale: (props.page==="home"?[1, 1, 1]:[0,0,0]) as [number, number, number],
+        bunScale: (props.page === "home" ? [1, 1, 1] : [0, 0, 0]) as [number, number, number],
         scale: [1, props.page === "home" ? 5 : 1, 0.75] as [number, number, number],
         config: {mass: 0.05, tension: 170, friction: 26}
     }), [props.position])
 
     const [bunVisible, setBunVisible] = useState(true)
+    const ctx = useContext(ScoreContext)
 
     const {nodes, materials} = useGLTF('/burger-transformed.glb') as GLTFResult
     materials["Material.001"].color.set("brown")
 
     const handleClick = () => {
-        props.handleClick()
-        if (props.page === "game") {
+        if(props.page==="home")props.handleClick()
+        else if (props.page === "game") {
             api.start({
                 position: [props.position[0], props.position[1] + 2, props.position[2]],
                 rotation: [0, 0, Math.PI / 2],
-                scale:[0.5,1,1],
+                scale: [0.5, 1, 1],
                 config: {duration: duration},
                 onRest: () => {
                     api.start({
                         position: [props.position[0], props.position[1], props.position[2]],
                         rotation: [0, 0, Math.PI],
-                        scale:[1,1,0.75],
+                        scale: [1, 1, 0.75],
                         config: {duration: duration},
                         onRest: () => {
                             api.start({
                                 rotation: [0, 0, 0],
                                 config: {duration: 0},
-                                onRest: () => {if(bunVisible)setBunVisible(false)}
+                                onRest: () => {
+                                    if(ctx)ctx.setScore(ctx.score + 1)
+                                    if (bunVisible) setBunVisible(false)
+                                }
                             })
                         }
                     })
@@ -76,9 +84,9 @@ function BurgaModel(props: BurgaProps) {
         <animated.group onClick={handleClick} dispose={null} {...props}
                         rotation={springs.rotation.to((x, y, z) => [x, y, z]) as unknown as [number, number, number]}
                         position={springs.position}>
-            <animated.group visible={bunVisible} scale={springs.bunScale}>
-                <BunTop/>
-                <BunBottom/>
+            <animated.group scale={springs.bunScale}>
+                <BunTopMemo/>
+                <BunBottomMemo/>
             </animated.group>
             {props.page === "home" && (
                 <>
