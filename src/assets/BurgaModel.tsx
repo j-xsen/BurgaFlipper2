@@ -9,7 +9,7 @@ import {useGLTF} from '@react-three/drei'
 import {type ObjectMap} from "@react-three/fiber";
 import type {GLTF} from "three-stdlib";
 import {animated, useSpring} from "@react-spring/three";
-import {memo, useContext, useState} from "react";
+import {memo, useContext, useState, useEffect, useRef} from "react";
 import {Root, Text} from "@react-three/uikit";
 import {BunTop} from "./BunTop.tsx";
 import {BunBottom} from './BunBottom.tsx';
@@ -46,6 +46,13 @@ function BurgaModel(props: BurgaProps) {
 
     const [bunVisible, setBunVisible] = useState(true)
     const ctx = useContext(ScoreContext)
+    const audioDingRef = useRef<HTMLAudioElement | null>(null)
+    const audioFlipRef = useRef<HTMLAudioElement | null>(null)
+
+    useEffect(() => {
+        audioDingRef.current = new Audio('/ding.opus')
+        audioFlipRef.current = new Audio('/flip.opus')
+    }, [])
 
     const {nodes, materials} = useGLTF('/burger-transformed.glb') as GLTFResult
     materials["Material.001"].color.set("brown")
@@ -53,6 +60,10 @@ function BurgaModel(props: BurgaProps) {
     const handleClick = () => {
         if(props.page==="home")props.handleClick()
         else if (props.page === "game") {
+            if(audioFlipRef.current){
+                audioFlipRef.current.currentTime = 0
+                audioFlipRef.current.play()
+            }
             api.start({
                 position: [props.position[0], props.position[1] + 2, props.position[2]],
                 rotation: [0, 0, Math.PI / 2],
@@ -69,7 +80,13 @@ function BurgaModel(props: BurgaProps) {
                                 rotation: [0, 0, 0],
                                 config: {duration: 0},
                                 onRest: () => {
-                                    if(ctx)ctx.setScore(ctx.score + 1)
+                                    if(ctx) {
+                                        ctx.setScore(ctx.score + 1)
+                                        if (audioDingRef.current) {
+                                            audioDingRef.current.currentTime = 0
+                                            audioDingRef.current.play()
+                                        }
+                                    }
                                     if (bunVisible) setBunVisible(false)
                                 }
                             })
