@@ -1,54 +1,78 @@
-# React + TypeScript + Vite
+# Burga Flipper 2 🍔
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+▶️ https://burga-flipper-2.vercel.app/
 
-Currently, two official plugins are available:
+A fun and addictive burga-flipping game inspired by [@77e7s](https://www.instagram.com/77e7s) on Instagram. Test your burga-flipping skills and aim for the highest score!
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## About The Game
 
-## Expanding the ESLint configuration
+Burga Flipper 2 is a casual game where players flip virtual burgas to rack up points. The more burgas you flip, the higher your score gets. It's straightforward, yet entertaining!
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🎮 How to Play
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+1. Click or tap to flip the burga
+2. Watch your score increase with each successful flip
+3. Try to beat your previous high score
+4. Challenge your friends to beat your record
+
+## 🛠️ Technical Stack
+
+- React 19.1.0
+- TypeScript 5.8.3
+- Three.js (via React Three Fiber/Drei)
+- Vite 6.3.5
+- React Spring for animations
+- Hosted on Vercel
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js
+- pnpm
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone git@github.com:j-xsen/BurgaFlipper2.git
+``` 
+
+2. Navigate to the project directory:
+```bash
+cd burga-flipper-2
+``` 
+
+3. Install dependencies:
+```bash
+pnpm install
+``` 
+
+4. Start the development server:
+```bash
+pnpm dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+5. Open your browser and navigate to `http://localhost:5173` (or the port shown in your terminal)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🏗️ Building for Production
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+To create a production build:
+
+```bash
+pnpm build
 ```
+
+The built files will be in the directory. `dist`
+
+## 📱 Compatibility
+- Works on modern web browsers
+- Responsive design for both desktop and mobile devices
+- Touch-screen friendly
+
+## 🙏 Credits
+- Original game concept inspired by [@77e7s](https://www.instagram.com/77e7s)
+- Built with React and Three.js
+- Powered by Vite
+
+Made with ❤️ and lots of virtual burgas 🍔
